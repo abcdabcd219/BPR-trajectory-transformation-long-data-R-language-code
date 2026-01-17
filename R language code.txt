@@ -1,0 +1,22 @@
+> install.packages("tidyverse")
+> library(dplyr)
+> library(tidyverse)
+>setwd("C:/Users/Dell/Desktop")
+>t2 <- read.csv("BPR.csv") 
+>str(t2)
+>df<-t2
+>str(df)
+>library(dplyr)
+>library(tidyr)
+>long_data <- df %>%
+    pivot_longer(
+        cols = c(starts_with("BPR_idx"), starts_with("charttimediff_BPR_idx")),
+        names_to = c(".value", "idx"), # 注意：.value 表示从列名中提取出的前缀将形成新的列（BPR_idx 和 charttimediff_BPR_idx），idx 则捕获数字部分。
+        names_pattern = "(BPR_idx|charttimediff_BPR_idx)(\\d+)" # 移除了可能多余的空格
+    ) %>%
+select(subject_id, idx, BPR_idx, charttimediff_BPR_idx)
+>write.csv(
+     x = long_data,          # 要导出的数据框
+     file = "long_data.csv", # 输出路径（可自定义路径，如 "data/long_data.csv"）
+     row.names = FALSE       # 不保存行号（默认 TRUE，通常不需要）
+)
